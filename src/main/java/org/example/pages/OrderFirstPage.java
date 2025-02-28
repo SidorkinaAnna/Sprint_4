@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.List;
 
 public class OrderFirstPage {
     private WebDriver driver;
@@ -15,7 +14,7 @@ public class OrderFirstPage {
     private By subwayInput = By.xpath("//input[@placeholder=\"* Станция метро\"]"); //нажать на выпадающий список станций метро
     private By phoneNumberInput = By.xpath("//input[@placeholder=\"* Телефон: на него позвонит курьер\"]"); //телефон заказчика
 
-    private By subwayItems = By.xpath("//ul[@class=\"select-search__options\"]//li[@class=\"select-search__row\"]//div[contains(@class, \"Text\")]"); //станции метро
+    private String subwayItemFormat = "//ul[@class=\"select-search__options\"]//li[@class=\"select-search__row\"]//div[contains(@class, \"Text\")][text()='%s']"; //формат для поиска конкретного элемента для поиска станции метро
 
     private By nextButton = By.xpath("//button[text()=\"Далее\"]"); //кнопка Далее
 
@@ -44,15 +43,8 @@ public class OrderFirstPage {
 
     public void selectSubway(String subwayName){
         driver.findElement(subwayInput).click();
-
-        List<WebElement> elements = driver.findElements(subwayItems);
-        for (int i = 0; i < elements.size(); i++) {
-            WebElement element = elements.get(i);
-            if (element.getText().equals(subwayName)) {
-                element.click();
-                return;
-            }
-        }
+        By subwaySpecifyElement = By.xpath(String.format(subwayItemFormat, subwayName));
+        driver.findElement(subwaySpecifyElement).click();
     }
 
     public void selectPhone(String phone){
